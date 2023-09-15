@@ -1,81 +1,116 @@
-interface IFly {
+interface FlyBehavior {
   fly(): void;
 }
 
-interface IQuack {
+interface QuackBehavior {
   quack(): void;
 }
 
-class FlyWithWings implements IFly {
-  fly(): void {
-    console.log("Fly with wings fly()");
-  }
-}
+abstract class Duck {
+  flyBehaviour: FlyBehavior;
+  quackBehavior: QuackBehavior;
 
-class FlyNoWay implements IFly {
-  fly(): void {
-    console.log("Fly no way fly()");
-  }
-}
+  abstract display(): void;
 
-class Quack implements IQuack {
-  quack(): void {
-    console.log("Quacking quack()");
-  }
-}
-
-class MuteQuack implements IQuack {
-  quack(): void {
-    console.log("Mute Quack quack()");
-  }
-}
-
-class Squeak implements IQuack {
-  quack(): void {
-    console.log("Squeak quack()");
-  }
-}
-
-class Duck {
-  private flyingBehaviour: IFly | undefined;
-  private quackBehaviour: IQuack | undefined;
-
-  swim(): void {
-    console.log("main class swim display()");
+  setFlyBehaviour(fb: FlyBehavior) {
+    this.flyBehaviour = fb;
   }
 
-  display(): void {
-    console.log("main class duck display()");
-  }
-
-  setPerformFly(fb: IFly) {
-    this.flyingBehaviour = fb;
+  setQuackBehaviour(qb: QuackBehavior) {
+    this.quackBehavior = qb;
   }
 
   performFly() {
-    this.flyingBehaviour ? this.flyingBehaviour.fly() : console.log("No flying behavior set");
-  }
-
-  setPerformQuack(qb: IQuack) {
-    this.quackBehaviour = qb;
+    this.flyBehaviour.fly();
   }
 
   performQuack() {
-    this.quackBehaviour ? this.quackBehaviour.quack() : console.log("No quacking behavior set");
+    this.quackBehavior.quack();
+  }
+
+  swim() {
+    console.log("All ducks floats");
   }
 }
 
-class MallardDuck extends Duck {}
+class FlyWithWings implements FlyBehavior {
+  fly(): void {
+    console.log("I am flying");
+  }
+}
 
-class RedHeadDuck extends Duck {}
+class FlyNoWay implements FlyBehavior {
+  fly(): void {
+    console.log("I can't flying");
+  }
+}
 
-class RubberDuck extends Duck {}
+class Quack implements QuackBehavior {
+  quack(): void {
+    console.log("I am quacking");
+  }
+}
 
-class WoddenDuck extends Duck {}
+class MuteQuack implements QuackBehavior {
+  quack(): void {
+    console.log("I can't quacking");
+  }
+}
 
-const mallardDuck: Duck = new MallardDuck();
-mallardDuck.setPerformFly(new FlyWithWings()); // Set flying behavior
-mallardDuck.setPerformQuack(new Quack()); // Set quacking behavior
+class Squeak implements QuackBehavior {
+  quack(): void {
+    console.log("I can't quacking but squeaking");
+  }
+}
 
-mallardDuck.performFly(); // Output: Fly with wings fly()
-mallardDuck.performQuack(); // Output: Quacking quack()
+class FlyRocketPowered implements FlyBehavior {
+  fly(): void {
+    console.log("I am flying with a rocket");
+  }
+}
+
+class MallardDuck extends Duck {
+  constructor() {
+    super();
+    this.quackBehavior = new Quack();
+    this.flyBehaviour = new FlyWithWings();
+  }
+
+  display(): void {
+    console.log("I am mallard duck");
+  }
+}
+
+class ModelDuck extends Duck {
+  constructor() {
+    super();
+    this.flyBehaviour = new FlyNoWay();
+    this.quackBehavior = new Quack();
+  }
+
+  display(): void {
+    console.log("I am a model duck");
+  }
+}
+
+class MiniDuckSimulator {
+  mallard: Duck = new MallardDuck();
+
+  mallardDuck() {
+    this.mallard.performQuack();
+    this.mallard.performFly();
+  }
+
+  modelDuck() {
+    const model: Duck = new ModelDuck();
+
+    model.performFly();
+    model.setFlyBehaviour(new FlyRocketPowered());
+    model.performFly();
+  }
+}
+
+const miniDuck = new MiniDuckSimulator();
+
+miniDuck.mallardDuck();
+miniDuck.modelDuck();
