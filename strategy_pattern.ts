@@ -1,3 +1,18 @@
+/*
+Design Principle
+  - Program to an interface, not an implementation
+  - Identify the aspects of your application that vary and seprate them from what stays the same
+
+Here’s another way to think about this principle: take the parts that vary and
+encapsulate them, so that later you can alter or extend the parts that vary without
+affecting those that don’t.
+
+“Program to an interface” really means “Program to a supertype.”
+
+NOTE: The Strategy Pattern defines a family of algorithms, encapsulates each one, and makes them
+interchangeable. Strategy lets the algorithm vary independently from clients that use it.
+*/
+
 interface FlyBehavior {
   fly(): void;
 }
